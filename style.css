@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.searchbar {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 80px;
+    left: 700px;
+}
+
+.searchbar .cerca {}
+
+.searchbar .btn {
+    margin-left: 5px;
+    width: 50px;
+    height: 20px;
+}
+
+.contenitore-film {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.film>ul {
+    list-style-type: none;
+}
