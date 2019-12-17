@@ -7,9 +7,6 @@
 .searchbar {
     display: flex;
     justify-content: center;
-    position: absolute;
-    top: 80px;
-    left: 700px;
 }
 
 .searchbar .cerca {}
@@ -28,4 +25,9 @@
 
 .film>ul {
     list-style-type: none;
+}
+
+.film {
+    border: 1px solid black;
+    width: 300px;
 }
