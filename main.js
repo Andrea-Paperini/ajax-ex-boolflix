@@ -31,7 +31,7 @@ $(document).ready(function() {
         var testo_ricerca = $('.cerca').val();
         // Verifico se input è vuoto altrimenti non vado avanti
         if (testo_ricerca.length != 0) {
-            // Chiamo ajax per recuperare il contenuto dell'API
+            // Chiamo ajax per recuperare il contenuto dell'API (FILM)
             $.ajax({
                 // uso url, data e api_key per mantenere il codice più pulito
                 'url': api_url + 'search/movie',
@@ -47,7 +47,7 @@ $(document).ready(function() {
                 'success': function(data) {
                     var film = data.results;
                     for (var i = 0; i < film.length; i++) {
-                        aggiungo il controllo se la lingua ha la bandiera allora la metto altrimenti stampo il nome della lingua
+                        // aggiungo il controllo se la lingua ha la bandiera allora la metto altrimenti stampo il nome della lingua
                         if (bandiereDisponibili.includes(film[i].original_language)) {
                             var bandiera = InserisciBandiera(film[i].original_language);
                             var state = '<img src="images/' + bandiera + '.png" alt="' + bandiera + '">';
@@ -57,17 +57,16 @@ $(document).ready(function() {
                         var film_corrente = film[i];
                         var titolo = film_corrente.title;
                         var titoloOriginale = film_corrente.original_title;
-
-
+                        var numero_stelle = normalizza_voto(voto);
                         var voto = film_corrente.vote_average;
 
                         // Creo la viariabile html per inserire il risultato e appenderlo in un div vuoto già creato
                         // la parte a sinistra sono le variabili nel template nell'html, quelle di destra sono i valori effettivi
                         var context = {
-                            titolo: titolo,
+                            titolo: '<h2>' + titolo + '</h2>',
                             titoloOriginale: titoloOriginale,
                             stato: state,
-                            voto: voto
+                            voto: crea_stelline(numero_stelle)
                         };
                         var html = template_function(context);
                         $(".contenitore-film").append(html);
@@ -75,6 +74,59 @@ $(document).ready(function() {
                 },
 
                 // Definisco l'errore nel caso in cui se ne verifichi uno
+                'error': function() {
+                    alert("Error!");
+                }
+            });
+            // Chiamata per le SerieTV
+            $.ajax({
+                'url': api_url + 'search/tv',
+                'data': {
+                    'api_key': '68ad21daba12040bb0c1a3b65b05bb45',
+                    'query': testo_ricerca,
+                    'language': 'it-IT'
+                },
+                'method': 'GET',
+                'success': function(data) {
+                    var film = data.results;
+                    for (var i = 0; i < film.length; i++) {
+                        if (bandiereDisponibili.includes(film[i].original_language)) {
+                            var bandiera = InserisciBandiera(film[i].original_language);
+                            var state = '<img src="images/' + bandiera + '.png" alt="' + bandiera + '">';
+                        } else {
+                            var state = film[i].original_language;
+                        }
+                        var film_corrente = film[i];
+                        // controllo se esiste la proprietà title per l'oggetto film_corrente
+                        if (film_corrente.hasOwnProperty('title')) {
+                            // se è definita è un film cioè il titolo è nella proprietà title
+                            var titolo = film_corrente.title;
+                            var tipo = 'film';
+                            console.log(tipo);
+                        } else {
+                            // se non è definita la proprietà title è una serie cioè il titolo usa la proprietà name
+                            var titolo = film_corrente.name;
+                            var tipo = 'serie tv';
+
+                        }
+                        if (film_corrente.hasOwnProperty('original_title')) {
+                            var titoloOriginale = film_corrente.original_title;
+                        } else {
+                            var titoloOriginale = film_corrente.original_name;
+                        }
+                        var numero_stelle = normalizza_voto(voto);
+                        var voto = film_corrente.vote_average;
+                        var context = {
+                            titolo: '<h2>' + titolo + '</h2>',
+                            titoloOriginale: titoloOriginale,
+                            stato: state,
+                            voto: crea_stelline(numero_stelle),
+                            type: tipo
+                        };
+                        var html = template_function(context);
+                        $(".contenitore-film").append(html);
+                    }
+                },
                 'error': function() {
                     alert("Error!");
                 }
@@ -106,5 +158,30 @@ $(document).ready(function() {
         }
         return nomeImmagine;
     }
-    // termino il document ready
+
+    function normalizza_voto(votazione) {
+        var voto_meta = votazione / 2;
+        // trovo il voto da 1 a 5 dividendo per 2
+        var numero_arrotondato = Math.ceil(voto_meta);
+        // arrotondo il numero per eccesso
+        return numero_arrotondato;
+        // restituisco il nuovo voto ottenuto
+    }
+
+    function crea_stelline(n_stelline) {
+        // creo 5 stelline
+        var stelline = '';
+        for (var i = 0; i < 5; i++) {
+            if (i < n_stelline) {
+                // n_stelline saranno piene
+                stelline += '<i class="fas fa-star"></i>';
+            } else {
+                // 5 - n_stelline saranno vuote
+                stelline += '<i class="far fa-star"></i>';
+            }
+        }
+        // restituisco la stringa contenente le 5 stelline (alcune piene e alcune vuote)
+        return stelline;
+        // termino il document ready
+    }
 });

@@ -31,3 +31,7 @@
     border: 1px solid black;
     width: 300px;
 }
+
+h2 {
+    display: inline;
+}

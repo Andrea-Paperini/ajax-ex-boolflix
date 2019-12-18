@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <script src="https://kit.fontawesome.com/e42df28727.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -19,10 +20,11 @@
     <script id="template-film" type="text/x-handlebars-template">
         <div class="film">
                 <ul>
-                    <li>Titolo: {{titolo}}</li>
-                    <li>Titolo originale: {{titoloOriginale}}</li>
-                    <li>Lingua: {{{stato}}}</li>
-                    <li>Voto: {{voto}}</li>
+                    <li>Titolo: {{{ titolo }}}</li>
+                    <li>Titolo originale: {{ titoloOriginale }}</li>
+                    <li>Tipologia: {{ type }} </li>
+                    <li>Lingua: {{{ stato }}}</li>
+                    <li>Voto: {{{ voto }}}</li>
                 </ul>
             </div>
         </script>
