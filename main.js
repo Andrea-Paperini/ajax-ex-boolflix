@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    // array contente tutte le bandiere disponibili
     var bandiereDisponibili = [
         'en',
         'it',
@@ -9,6 +10,12 @@ $(document).ready(function() {
     ]
     // stabilisco una variabile per url iniziale dell'API
     var api_url = 'https://api.themoviedb.org/3/';
+    // Percorso base delle immagini di TMDB
+    var image_url_base = 'https://image.tmdb.org/t/p/';
+    // Dimensione del poster del Film
+    var image_size = 'w342';
+    // immagine di rimpiazzo se non c'è un immagine di copertina
+    var available = 'http://story-one.com/wp-content/uploads/2016/02/Poster_Not_Available2.jpg';
     // associo il click sul bottone che usa la funzione di ricerca dei film
     $(".btn").click(function() {
         cercaFilm();
@@ -18,6 +25,13 @@ $(document).ready(function() {
         if (event.which == 13) {
             cercaFilm();
         }
+    });
+    // funzione per far apparire quando il mouse è dentro l'area di un Film/SerieTV le informazioni tipo il titolo, il titolo originale, la lingua e le votazioni
+    $(document).on("mouseenter", ".film", function() {
+        $(this).addClass("active");
+    });
+    $(document).on("mouseleave", ".film", function() {
+        $(this).removeClass("active");
     });
 
     function cercaFilm() {
@@ -54,11 +68,20 @@ $(document).ready(function() {
                         } else {
                             var state = film[i].original_language;
                         }
+                        var tipo = 'film';
                         var film_corrente = film[i];
                         var titolo = film_corrente.title;
                         var titoloOriginale = film_corrente.original_title;
                         var numero_stelle = normalizza_voto(voto);
                         var voto = film_corrente.vote_average;
+                        // se è definita un'immagine di copertina costruisco l'url per recuperare l'immagine
+                        if (film_corrente.poster_path != null) {
+                            var immagine_locandina = image_url_base + image_size + film_corrente.poster_path;
+                        } else {
+                            // se non è definita utilizzo l'immagine nella variabile available
+                            var immagine_locandina = available;
+                        }
+
 
                         // Creo la viariabile html per inserire il risultato e appenderlo in un div vuoto già creato
                         // la parte a sinistra sono le variabili nel template nell'html, quelle di destra sono i valori effettivi
@@ -66,7 +89,9 @@ $(document).ready(function() {
                             titolo: '<h2>' + titolo + '</h2>',
                             titoloOriginale: titoloOriginale,
                             stato: state,
-                            voto: crea_stelline(numero_stelle)
+                            voto: crea_stelline(numero_stelle),
+                            type: tipo,
+                            immagine: immagine_locandina
                         };
                         var html = template_function(context);
                         $(".contenitore-film").append(html);
@@ -101,7 +126,7 @@ $(document).ready(function() {
                         if (film_corrente.hasOwnProperty('title')) {
                             // se è definita è un film cioè il titolo è nella proprietà title
                             var titolo = film_corrente.title;
-                            var tipo = 'film';
+
                             console.log(tipo);
                         } else {
                             // se non è definita la proprietà title è una serie cioè il titolo usa la proprietà name

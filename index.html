@@ -12,13 +12,22 @@
 </head>
 
 <body>
-    <div class="searchbar">
-        <input class="cerca" type="text" placeholder="Cerca un film">
-        <button class="btn" type="button" name="Schiaccia"></button>
+    <div class="header clearfix">
+        <div class="left">
+            <h2>BoolFlix</h2>
+        </div>
+        <div class="right">
+            <div class="searchbar">
+                <input class="cerca" type="text" placeholder="Cerca un film">
+                <button class="btn" type="button" name="Schiaccia"></button>
+            </div>
+        </div>
     </div>
-    <div class="contenitore-film"></div>
-    <script id="template-film" type="text/x-handlebars-template">
-        <div class="film">
+    <main>
+        <div class="contenitore-film"></div>
+        <script id="template-film" type="text/x-handlebars-template">
+            <div class="film">
+                <img class="locandina" src="{{ immagine }}">
                 <ul>
                     <li>Titolo: {{{ titolo }}}</li>
                     <li>Titolo originale: {{ titoloOriginale }}</li>
@@ -28,6 +37,7 @@
                 </ul>
             </div>
         </script>
+    </main>
 </body>
 
 </html>
